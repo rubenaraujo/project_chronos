@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="shortcut icon" type="image/png" href="website-icons/chronos-24.png" />
+    <title>CHRONOS</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <div class="logo-container">
+        <img src="./website-icons/logo-with-text-no-bg.png" class="logo" />
+    </div>
+</head>
+
+<body>
+    <div id="loader">
+        <div class="fa fa-refresh fa-spin"></div>
+    </div>
+    <div id="table" class="table-responsive">
+        <div class="time">
+            Passa em
+            <select id="where-am-i" onchange="fetchData()">
+                <option value="">Select Station</option>
+                <option value="porto_s_bento">PORTO S. BENTO</option>
+                <option value="trofa">TROFA</option>
+            </select>
+            <t>ás</t> 
+            <input type="date" id="start-date" onchange="fetchData()"">
+            <button id="fetch-button" onclick="fetchData()"><i class="fa fa-refresh"></i></button> 
+        </div>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    <th>Origem</th>
+                    <th>Destino</th>
+                    <th>Serviço</th>
+                    <th>Observações</th>
+                </tr>
+            </thead>
+        </table>
+        <br>
+        <div class="footer">
+            <small>
+                developed by Ruben Araujo
+            </small>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
