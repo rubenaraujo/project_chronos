@@ -37,7 +37,7 @@ function loader() {
     setTimeout(function () {
        loader.style.display = 'none';
        table.style.display = 'block';
-    }, 2000);
+    }, 3000);
    }
    
    loader();
