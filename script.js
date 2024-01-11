@@ -9,18 +9,42 @@ const stations = {
     }
 }
 
+const services = {
+    "IC": {
+        "color": "&#128993"
+    },
+    "IR": {
+        "color": "&#128992"
+    },
+    "ALFA": {
+        "color": "&#128309"
+    },
+    "REGIONAL": {
+        "color": "&#128996"
+    },
+    "URB|SUBUR": {
+        "color": "&#128994"
+    },
+    "ESPECIAL": {
+        "color": "&#8226;"
+    },
+    "INTERNACIONAL": {
+        "color": "&#128995"
+    }
+}
+
 class DataObject {
     constructor(data = []) {
         this.data = data;
     }
 
-    add(dataHoraPartidaChegada, nomeEstacaoOrigem, nomeEstacaoDestino, operador, tipoServico, observacoes) {
+    add(tipoServico, dataHoraPartidaChegada, nomeEstacaoOrigem, nomeEstacaoDestino, operador, observacoes) {
         this.data.push({
+            tipoServico: tipoServico,
             dataHoraPartidaChegada: dataHoraPartidaChegada,
             nomeEstacaoOrigem: nomeEstacaoOrigem,
             nomeEstacaoDestino: nomeEstacaoDestino,
             operador: operador,
-            tipoServico: tipoServico,
             observacoes: observacoes
         });
     }
@@ -85,11 +109,20 @@ function fetchData() {
     ])
     .then(values => {
         const dataToShow = [].concat(...values);
-        addDataToTable(new DataObject(dataToShow));
+        addDataToTable(new DataObject(replaceServices(dataToShow)));
     })
     .catch(error => {
         console.error('Error fetching data:', error);
     });
+}
+
+function replaceServices(dataToShow) {
+    for (let i = 0; i < dataToShow.length; i++) {
+        console.log(dataToShow[i].tipoServico);
+        dataToShow[i].tipoServico = services[dataToShow[i].tipoServico].color;
+    }
+    console.log(dataToShow);
+    return dataToShow;
 }
 
 function fetchDataForTimeFrame(startDateTime, endDateTime, stationCode) {
@@ -107,11 +140,11 @@ function fetchDataForTimeFrame(startDateTime, endDateTime, stationCode) {
             let dataObject = new DataObject();
             for (let i = 0; i < estacoes.length; i++) {
                 dataObject.add(
+                    estacoes[i].TipoServico,
                     estacoes[i].DataHoraPartidaChegada,
                     estacoes[i].NomeEstacaoOrigem,
                     estacoes[i].NomeEstacaoDestino,
                     estacoes[i].Operador,
-                    estacoes[i].TipoServico,
                     estacoes[i].Observacoes,
                 );
             }
@@ -124,15 +157,15 @@ function addDataToTable(dataObject) {
     for (let i = 0; i < estacoes.length; i++) {
         let table = document.getElementById('data-table');
         let row = table.insertRow(-1);
-        let dataHoraPartidaChegada = row.insertCell(0);
-        let nomeEstacaoOrigem = row.insertCell(1);
-        let nomeEstacaoDestino = row.insertCell(2);
-        let tipoServico = row.insertCell(3);
+        let tipoServico = row.insertCell(0);
+        let dataHoraPartidaChegada = row.insertCell(1);
+        let nomeEstacaoOrigem = row.insertCell(2);
+        let nomeEstacaoDestino = row.insertCell(3);
         let observacoes = row.insertCell(4);
+        tipoServico.innerHTML = estacoes[i].tipoServico;
         dataHoraPartidaChegada.innerHTML = estacoes[i].dataHoraPartidaChegada;
         nomeEstacaoOrigem.innerHTML = estacoes[i].nomeEstacaoOrigem;
         nomeEstacaoDestino.innerHTML = estacoes[i].nomeEstacaoDestino;
-        tipoServico.innerHTML = estacoes[i].tipoServico;
         observacoes.innerHTML = estacoes[i].observacoes;
 
         if (dataObject.data[i].observacoes == "SUPRIMIDO") {
