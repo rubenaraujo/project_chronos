@@ -9,9 +9,8 @@ body {
 }
 
 .logo {
-    padding-top: 10px;
     animation: fadein 1.2s;
-    padding: 15px;
+    width: 150px;
 }
 
 table {
@@ -124,6 +123,7 @@ tbody tr.hide {
     .time {
         flex-direction: column;
         align-items: center;
+        padding-top: 0px;
     }
 
     #where-am-i, #start-date, #fetch-button {
@@ -141,5 +141,8 @@ tbody tr.hide {
 
     th, td {
         padding: 5px;
+    }
+    .logo {
+        width: 75px;
     }
 }
