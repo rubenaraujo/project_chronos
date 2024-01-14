@@ -11,7 +11,7 @@ body {
 .logo {
     padding-top: 10px;
     animation: fadein 1.2s;
-    width: 280px;
+    width: 270px;
 }
 
 table {
@@ -103,10 +103,6 @@ tbody tr.hide {
   }
 
 @media only screen and (max-width: 800px) {
-    .logo {
-        width: 250px;
-    }
-    
     .team-names span {
         display: block;
         margin-bottom: 10px;
@@ -144,6 +140,6 @@ tbody tr.hide {
         padding: 5px;
     }
     .logo {
-        width: 75px;
+        width: 170px;
     }
 }
