@@ -55,14 +55,23 @@ let now = new Date();
 document.getElementById('start-date').valueAsDate = now;
 document.getElementById('where-am-i').value = "porto_s_bento";
 
-function loader() {
+function loader(show) {
     var loader = document.getElementById('loader');
     var table = document.getElementById('table');
-    setTimeout(function () {
-       loader.style.display = 'none';
-       table.style.display = 'block';
-    }, 3000);
-   }
+    if (show) {
+        loader.style.display = 'block';
+        table.style.display = 'none';
+        setTimeout(function () {
+            loader.style.display = 'none';
+            table.style.display = 'block';
+        }, 2500);
+    } else {
+        setTimeout(function () {
+            loader.style.display = 'none';
+            table.style.display = 'block';
+        }, 2500);
+    }
+}
    
    loader();
 
@@ -83,6 +92,7 @@ function clearData() {
 }
 
 function fetchData() {
+    loader(true);
     clearData();
 
     let startDateInput = document.getElementById('start-date');
