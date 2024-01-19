@@ -172,6 +172,9 @@ function addDataToTable(dataObject) {
         let nomeEstacaoOrigem = row.insertCell(2);
         let nomeEstacaoDestino = row.insertCell(3);
         let observacoes = row.insertCell(4);
+        if (estacoes[i].observacoes == "") {
+            estacoes[i].observacoes = "-";
+        }
         tipoServico.innerHTML = estacoes[i].tipoServico;
         dataHoraPartidaChegada.innerHTML = estacoes[i].dataHoraPartidaChegada;
         nomeEstacaoOrigem.innerHTML = estacoes[i].nomeEstacaoOrigem;
