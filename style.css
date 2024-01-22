@@ -32,6 +32,13 @@ button {
     outline: none;
 }
 
+#subtitle {
+    text-align: center;
+    vertical-align: middle;
+    border: none;
+    font-size: 12px;
+}
+
 .time {
     padding: 10px;
     text-align: center;
@@ -116,11 +123,11 @@ tbody tr.hide {
         margin-right: 2px;
       }
 
-    /* Add responsive styles here */
     .time {
         flex-direction: column;
         align-items: center;
         padding-top: 0px;
+        padding-bottom: 0px;
     }
 
     #where-am-i, #start-date, #fetch-button {
@@ -130,6 +137,10 @@ tbody tr.hide {
 
     #data-table {
         margin: 0;
+    }
+
+    #subtitle {
+        font-size: 8px;
     }
 
     table {

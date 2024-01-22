@@ -25,11 +25,11 @@ const services = {
     "URB|SUBUR": {
         "color": "&#128994"
     },
-    "ESPECIAL": {
-        "color": "&#8226;"
-    },
     "INTERNACIONAL": {
         "color": "&#128995"
+    },
+    "ESPECIAL": {
+        "color": "&#128997"
     }
 }
 
@@ -88,6 +88,16 @@ function clearData() {
     let table = document.getElementById('data-table');
     for (let i = table.rows.length - 1; i > 0; i--) {
         table.deleteRow(i);
+    }
+}
+
+function addSubtitle() {
+    let legend = document.getElementById('subtitle');
+    legend.innerHTML = "";
+    for (let key in services) {
+        let color = services[key].color;
+        let text = key;
+        legend.innerHTML += `<span style="color: ${color}; font-size: 20px;">${color}</span> ${text} &nbsp; &nbsp;`;
     }
 }
 
@@ -192,4 +202,5 @@ function addDataToTable(dataObject) {
     
 }
 
+addSubtitle();
 fetchData();
