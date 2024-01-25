@@ -6,7 +6,15 @@ const stations = {
     "trofa": {
         "key": "9404630",
         "name": "TROFA"
-    }
+    },
+    "ermesinde": {
+        "key": "9404002",
+        "name": "ERMESINDE"
+    },
+    "vizela": {
+        "key": "9428233",
+        "name": "VIZELA"
+    },
 }
 
 const services = {
