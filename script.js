@@ -69,19 +69,11 @@ function loader(show) {
     if (show) {
         loader.style.display = 'block';
         table.style.display = 'none';
-        setTimeout(function () {
-            loader.style.display = 'none';
-            table.style.display = 'block';
-        }, 2500);
     } else {
-        setTimeout(function () {
-            loader.style.display = 'none';
-            table.style.display = 'block';
-        }, 2500);
+        loader.style.display = 'none';
+        table.style.display = 'block';
     }
 }
-   
-   loader();
 
 function formatDate(date) {
     let year = date.getFullYear();
@@ -138,6 +130,7 @@ function fetchData() {
     .then(values => {
         const dataToShow = [].concat(...values);
         addDataToTable(new DataObject(replaceServices(dataToShow)));
+        loader(false)
     })
     .catch(error => {
         console.error('Error fetching data:', error);
