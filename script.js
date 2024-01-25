@@ -157,6 +157,9 @@ function fetchDataForTimeFrame(startDateTime, endDateTime, stationCode) {
             return response.json();
         })
         .then(data => {
+            if (data.response.length == 0) {
+                return [];
+            }
             let estacoes = data.response[0].NodesComboioTabelsPartidasChegadas;
             let dataObject = new DataObject();
             for (let i = 0; i < estacoes.length; i++) {
