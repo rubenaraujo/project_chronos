@@ -117,16 +117,21 @@ function fetchData() {
     let whereAmI = document.getElementById('where-am-i').value;
     let stationCode = stations[whereAmI].key;
 
-    // Divide the time into 3 different time frames
-    let timeFrameDuration = (endDateTime - startDateTime) / 3;
-    let timeFrame1End = new Date(startDateTime.getTime() + timeFrameDuration);
-    let timeFrame2End = new Date(timeFrame1End.getTime() + timeFrameDuration);
+    let duration = (endDateTime - startDateTime)
 
-    Promise.all([
-        fetchDataForTimeFrame(startDateTime, timeFrame1End, stationCode),
-        fetchDataForTimeFrame(timeFrame1End, timeFrame2End, stationCode),
-        fetchDataForTimeFrame(timeFrame2End, endDateTime, stationCode),
-    ])
+    // find out how many time frames we need, knowing that for each 6 hours we will get 1 timeframe
+    let timeFrameDuration = 6 * 60 * 60 * 1000;
+    let numberOfFrames = Math.ceil((duration / timeFrameDuration));
+    let promises = [];
+    for (var i = 0; i < numberOfFrames; i++) {
+        promises.push(fetchDataForTimeFrame(
+            new Date(startDateTime.getTime() + (i * timeFrameDuration)),
+            new Date(startDateTime.getTime() + ((i + 1) * timeFrameDuration)),
+            stationCode
+        ));
+    }
+
+    Promise.all(promises)
     .then(values => {
         const dataToShow = [].concat(...values);
         addDataToTable(new DataObject(replaceServices(dataToShow)));
@@ -139,10 +144,8 @@ function fetchData() {
 
 function replaceServices(dataToShow) {
     for (let i = 0; i < dataToShow.length; i++) {
-        console.log(dataToShow[i].tipoServico);
         dataToShow[i].tipoServico = services[dataToShow[i].tipoServico].color;
     }
-    console.log(dataToShow);
     return dataToShow;
 }
 
