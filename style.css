@@ -32,6 +32,11 @@ button {
     outline: none;
 }
 
+#toggle-past-button {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
 #subtitle {
     text-align: center;
     vertical-align: middle;
@@ -130,9 +135,13 @@ tbody tr.hide {
         padding-bottom: 0px;
     }
 
-    #where-am-i, #start-date, #fetch-button {
+    #where-am-i, #start-date, #fetch-button, #toggle-past-button {
         margin: 5px 0;
         font-size: 10px;
+    }
+
+    #fetch-button {
+        padding-right: 5px;
     }
 
     #data-table {

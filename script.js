@@ -62,6 +62,7 @@ class DataObject {
 let now = new Date();
 document.getElementById('start-date').valueAsDate = now;
 document.getElementById('where-am-i').value = "porto_s_bento";
+let showPast = false;
 
 function loader(show) {
     var loader = document.getElementById('loader');
@@ -107,7 +108,8 @@ function fetchData() {
 
     let startDateInput = document.getElementById('start-date');
     let startDate = startDateInput.value ? new Date(startDateInput.value) : new Date();
-    let startTime = startDate.toDateString() == now.toDateString() ? now.toTimeString().substring(0,5) : "00:00";
+    let startTime = startDate.toDateString() == now.toDateString() && !showPast ? now.toTimeString().substring(0,5) : "00:00";
+
     let endDate = startDate;
     let endTime = "23:59";
 
@@ -134,7 +136,7 @@ function fetchData() {
     Promise.all(promises)
     .then(values => {
         const dataToShow = [].concat(...values);
-        addDataToTable(new DataObject(replaceServices(dataToShow)));
+        addDataToTable(startDate, new DataObject(replaceServices(dataToShow)));
         loader(false)
     })
     .catch(error => {
@@ -179,7 +181,22 @@ function fetchDataForTimeFrame(startDateTime, endDateTime, stationCode) {
         });
 }
 
-function addDataToTable(dataObject) {
+function toggleShowPast() {
+    showPast = !showPast;
+    fetchData();
+    updateButtonColor();
+}
+
+function updateButtonColor() {
+    const button = document.getElementById('toggle-past-button');
+    if (showPast) {
+        button.style.color = 'rgb(244,212,164)';
+    } else {
+        button.style.color = '';
+    }
+}
+
+function addDataToTable(startDate, dataObject) {
     let estacoes = dataObject.data;
     for (let i = 0; i < estacoes.length; i++) {
         let table = document.getElementById('data-table');
@@ -204,6 +221,18 @@ function addDataToTable(dataObject) {
             table.rows[i + 1].style.backgroundColor = "#e6b800";
         } else {
             table.rows[i + 1].style.backgroundColor = "#0e2b0c"
+        }
+
+        if (showPast) {
+            let now = new Date();
+            if (startDate < now) {
+                console.log(estacoes[i].dataHoraPartidaChegada);
+                let dataHoraPartidaChegada = new Date(`${now.toISOString().split('T')[0]}T${estacoes[i].dataHoraPartidaChegada}`);
+                console.log(dataHoraPartidaChegada);
+                if (now > dataHoraPartidaChegada) {
+                    table.rows[i + 1].style.opacity = 0.2;
+                }
+            }
         }
     }
     
