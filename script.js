@@ -75,6 +75,7 @@ function loader(show, isPopup = false) {
         if (isPopup) {
             loader.style.display = 'block';
             popupContent.style.display = 'none';
+            table.style.display = 'none';
             popup.classList.add('popup-loading');
         } else {
             loader.style.display = 'block';
@@ -85,6 +86,7 @@ function loader(show, isPopup = false) {
             loader.style.display = 'none';
             popupContent.style.display = 'block';
             popup.classList.remove('popup-loading');
+            table.style.display = 'block';
         } else {
             loader.style.display = 'none';
             table.style.display = 'block';
@@ -274,12 +276,12 @@ function parseTrainData(response) {
 }
 
 function showPopup(nComboio) {
-    document.getElementById('popup').style.display = 'block';
-    document.getElementById('popup-content').innerHTML = '';
     loader(true, true);
 
     fetchDataForTrain(nComboio).then(data => {
         const parsedData = parseTrainData(data);
+        document.getElementById('popup').style.display = 'block';
+        document.getElementById('popup-content').innerHTML = '';
         loader(false, true);
         document.getElementById('popup-content').innerHTML = `
             <table class="passage-table">
