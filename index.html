@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <div id="loader">
+    <div id="loader" class="loader">
         <div class="fa fa-refresh fa-spin"></div>
     </div>
     <div id="table" class="table-responsive">
@@ -52,6 +52,11 @@
                 developed by Ruben Araujo
             </small>
         </div>
+    </div>
+    <div id="popup" class="popup">
+        <div id="loader" class="loader"></div>
+        <div id="popup-content" class="popup-content"></div>
+        <button class="close-button" onclick="closePopup()">×</button>
     </div>
     <script src="script.js"></script>
 </body>

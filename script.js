@@ -46,14 +46,15 @@ class DataObject {
         this.data = data;
     }
 
-    add(tipoServico, dataHoraPartidaChegada, nomeEstacaoOrigem, nomeEstacaoDestino, operador, observacoes) {
+    add(tipoServico, dataHoraPartidaChegada, nomeEstacaoOrigem, nomeEstacaoDestino, operador, observacoes, nComboio) {
         this.data.push({
             tipoServico: tipoServico,
             dataHoraPartidaChegada: dataHoraPartidaChegada,
             nomeEstacaoOrigem: nomeEstacaoOrigem,
             nomeEstacaoDestino: nomeEstacaoDestino,
             operador: operador,
-            observacoes: observacoes
+            observacoes: observacoes,
+            nComboio: nComboio
         });
     }
 }
@@ -64,15 +65,30 @@ document.getElementById('start-date').valueAsDate = now;
 document.getElementById('where-am-i').value = "porto_s_bento";
 let showPast = false;
 
-function loader(show) {
+function loader(show, isPopup = false) {
     var loader = document.getElementById('loader');
     var table = document.getElementById('table');
+    var popup = document.getElementById('popup');
+    var popupContent = document.getElementById('popup-content');
+
     if (show) {
-        loader.style.display = 'block';
-        table.style.display = 'none';
+        if (isPopup) {
+            loader.style.display = 'block';
+            popupContent.style.display = 'none';
+            popup.classList.add('popup-loading');
+        } else {
+            loader.style.display = 'block';
+            table.style.display = 'none';
+        }
     } else {
-        loader.style.display = 'none';
-        table.style.display = 'block';
+        if (isPopup) {
+            loader.style.display = 'none';
+            popupContent.style.display = 'block';
+            popup.classList.remove('popup-loading');
+        } else {
+            loader.style.display = 'none';
+            table.style.display = 'block';
+        }
     }
 }
 
@@ -175,6 +191,7 @@ function fetchDataForTimeFrame(startDateTime, endDateTime, stationCode) {
                     estacoes[i].NomeEstacaoDestino,
                     estacoes[i].Operador,
                     estacoes[i].Observacoes,
+                    estacoes[i].NComboio1
                 );
             }
             return dataObject.data;
@@ -206,15 +223,12 @@ function addDataToTable(startDate, dataObject) {
         let nomeEstacaoOrigem = row.insertCell(2);
         let nomeEstacaoDestino = row.insertCell(3);
         let observacoes = row.insertCell(4);
-        if (estacoes[i].observacoes == "") {
-            estacoes[i].observacoes = "-";
-        }
+        let nComboio = estacoes[i].nComboio;
         tipoServico.innerHTML = estacoes[i].tipoServico;
         dataHoraPartidaChegada.innerHTML = estacoes[i].dataHoraPartidaChegada;
         nomeEstacaoOrigem.innerHTML = estacoes[i].nomeEstacaoOrigem;
         nomeEstacaoDestino.innerHTML = estacoes[i].nomeEstacaoDestino;
         observacoes.innerHTML = estacoes[i].observacoes;
-
         if (dataObject.data[i].observacoes == "SUPRIMIDO") {
             table.rows[i + 1].style.backgroundColor = "#771919";
         } else if (dataObject.data[i].observacoes == "ATRASADO") {
@@ -222,20 +236,89 @@ function addDataToTable(startDate, dataObject) {
         } else {
             table.rows[i + 1].style.backgroundColor = "#0e2b0c"
         }
-
         if (showPast) {
             let now = new Date();
             if (startDate < now) {
-                console.log(estacoes[i].dataHoraPartidaChegada);
                 let dataHoraPartidaChegada = new Date(`${now.toISOString().split('T')[0]}T${estacoes[i].dataHoraPartidaChegada}`);
-                console.log(dataHoraPartidaChegada);
                 if (now > dataHoraPartidaChegada) {
                     table.rows[i + 1].style.opacity = 0.2;
                 }
             }
         }
+        if (nComboio !== undefined) {
+            row.addEventListener('click', function() {
+                showPopup(nComboio);
+            });
+        }
     }
-    
+}
+
+function parseTrainData(response) {
+    const data = response.response;
+    return {
+        origem: data.Origem,
+        destino: data.Destino,
+        dataHoraOrigem: data.DataHoraOrigem,
+        dataHoraDestino: data.DataHoraDestino,
+        duracaoViagem: data.DuracaoViagem,
+        operador: data.Operador,
+        situacaoComboio: data.SituacaoComboio,
+        tipoServico: data.TipoServico,
+        nodesPassagem: data.NodesPassagemComboio.map(node => ({
+            comboioPassou: node.ComboioPassou,
+            horaProgramada: node.HoraProgramada,
+            nomeEstacao: node.NomeEstacao,
+            observacoes: node.Observacoes
+        }))
+    };
+}
+
+function showPopup(nComboio) {
+    document.getElementById('popup').style.display = 'block';
+    document.getElementById('popup-content').innerHTML = '';
+    loader(true, true);
+
+    fetchDataForTrain(nComboio).then(data => {
+        const parsedData = parseTrainData(data);
+        loader(false, true);
+        document.getElementById('popup-content').innerHTML = `
+            <table class="passage-table">
+                ${parsedData.nodesPassagem.map((node, index, array) => {
+                    let imageSrc;
+                    if (index === array.length - 1) {
+                        imageSrc = node.comboioPassou ? 'passou-last-true.png' : 'passou-last-false.png';
+                    } else {
+                        imageSrc = node.comboioPassou ? 'passou-true.png' : 'passou-false.png';
+                    }
+                    return `
+                        <tr>
+                            <td>${node.nomeEstacao}</td>
+                            <td><img src="${imageSrc}" alt="${node.comboioPassou ? 'True' : 'False'}"></td>
+                            <td>${node.horaProgramada}</td>
+                        </tr>
+                    `;
+                }).join('')}
+            </table>
+        `;
+    }).catch(error => {
+        loader(false, true);
+        document.getElementById('popup-content').innerText = `Error fetching data: ${error.message}`;
+    });
+}
+
+function fetchDataForTrain(nComboio) {
+    let url = `https://corsproxy.io/?https://servicos.infraestruturasdeportugal.pt/negocios-e-servicos/horarios-ncombio/${nComboio}/${new Date().toISOString().split('T')[0]}`;
+    return fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        });
+}
+
+function closePopup() {
+    document.getElementById('popup').style.display = 'none';
 }
 
 addSubtitle();

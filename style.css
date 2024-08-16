@@ -59,20 +59,19 @@ td {
     border: none;
 }
 
-#loader {
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #1a1a1a;
-  color: #fff;
-  font-size: 2em;
-  text-align: center;
-  line-height: 100vh;
-  transition: 3s ease;
-  z-index: 1000;
+.loader {
+    display: none; /* Initially hidden */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 26, 26, 0.8); /* Semi-transparent background */
+    color: #fff;
+    font-size: 2em;
+    text-align: center;
+    line-height: 100vh;
+    z-index: 2000; /* Ensure it appears in front of the popup content */
 }
 
 td {
@@ -103,18 +102,125 @@ tbody tr.hide {
     padding: 5px;
     font-size: 11px;
     text-align: center;
-  }
+}
 
-  .channel-icon {
+.channel-icon {
     display: inline-block;
     max-height: 15px;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: contain;
     margin-right: 5px;
-  }
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 420px;
+    padding: 20px;
+    background-color: rgb(0,0,0);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    z-index: 1000;
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+    color: #e0e0e0;
+    overflow: auto;
+    max-height: 80vh;
+}
+
+.popup-loading {
+    width: 420px;
+    height: 250px;
+}
+
+.popup-content {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.popup {
+    border: none;
+    color: #e0e0e0;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #aaaaaa;
+    font-size: 30px;
+    font-weight: bold;
+    padding: 0;
+    position: fixed; 
+    top: 10px;
+    right: 10px;
+    z-index: 1001;
+}
+
+.popup .close-button:hover,
+.close-button:focus {
+    color: #6c6c6c;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.passage-table {
+    border-collapse: collapse;
+    font-size: 14px;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.passage-table td {
+    padding: 0;
+    margin: 0;
+    vertical-align: top;
+    text-align: center; 
+}
+
+.passage-table img {
+    width: 25%;
+    display: block;
+    margin: 0 auto; 
+}
+
+.passage-table td:first-child,
+.passage-table td:last-child {
+    padding-top: 15px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 
 @media only screen and (max-width: 800px) {
+    .popup {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .popup-content {
+        padding: 10px;
+    }
+
+    .passage-table {
+        font-size: 10px;
+    }
+
+    .close-button {
+        font-size: 24px;
+    }
+
     .team-names span {
         display: block;
         margin-bottom: 10px;
@@ -135,9 +241,14 @@ tbody tr.hide {
         padding-bottom: 0px;
     }
 
-    #where-am-i, #start-date, #fetch-button, #toggle-past-button {
+    #where-am-i, #start-date {
         margin: 5px 0;
         font-size: 10px;
+    }
+
+    #fetch-button, #toggle-past-button {
+        margin: 5px 0;
+        font-size: 12px;
     }
 
     #fetch-button {
