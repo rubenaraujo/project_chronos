@@ -262,4 +262,9 @@ tbody tr.hide {
     .logo {
         width: 170px;
     }
+    #data-table th:nth-child(5),
+    #data-table td:nth-child(5) {
+        white-space: normal;
+        word-wrap: break-word;
+    }
 }
