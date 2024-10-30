@@ -60,7 +60,21 @@ td {
 }
 
 .loader {
-    display: none; 
+    display: none;
+}
+
+.train-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loader-text {
+    text-align: center;
+    color: #fff;
+    font-size: 20px;
+    margin-top: 20px; /* Adjust as needed to position below the train */
+    width: 100%;
 }
 
 td {
