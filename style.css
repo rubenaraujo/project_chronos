@@ -20,6 +20,7 @@ table {
     width: 100%;
     max-width: 800px;
     margin-bottom: 0px;
+    border-spacing: 0;
 }
 
 button {
@@ -54,9 +55,9 @@ button {
 th,
 td {
     padding: 10px;
-    text-align: center;
     vertical-align: middle;
     border: none;
+    border-bottom: 1px solid #393838;
 }
 
 .loader {
