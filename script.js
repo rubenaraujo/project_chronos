@@ -3,6 +3,10 @@ const stations = {
         "key": "9401008",
         "name": "PORTO S. BENTO"
     },
+    "porto_campanha": {
+        "key": "9402006",
+        "name": "PORTO CAMPANHÃ"
+    },
     "trofa": {
         "key": "9404630",
         "name": "TROFA"
@@ -15,6 +19,10 @@ const stations = {
         "key": "9428233",
         "name": "VIZELA"
     },
+    "braga": {
+        "key": "9429157",
+        "name": "BRAGA"
+    }
 }
 
 const services = {
