@@ -2,7 +2,7 @@ const stations = {
     "porto_s_bento": {
         "key": "9401008",
         "name": "PORTO S. BENTO"
-    }, 
+    },
     "trofa": {
         "key": "9404630",
         "name": "TROFA"
@@ -113,10 +113,20 @@ function clearData() {
 function addSubtitle() {
     let legend = document.getElementById('subtitle');
     legend.innerHTML = "";
+    // Map service to color hex 
+    const serviceColors = {
+        IC: '#e74c3c',
+        IR: '#f39c12',
+        ALFA: '#2980b9',
+        REGIONAL: '#8e44ad',
+        'URB|SUBUR': '#27ae60',
+        INTERNACIONAL: '#c1c1c1ff',
+        ESPECIAL: '#fed1b3ff'
+    };
     for (let key in services) {
-        let color = services[key].color;
+        let color = serviceColors[key] || '#fff';
         let text = key;
-        legend.innerHTML += `<span style="color: ${color}; font-size: 20px;">${color}</span> ${text} &nbsp; &nbsp;`;
+        legend.innerHTML += `<span style="color: ${color}; font-size: 16px; margin-right: 18px; font-weight: bold;">${text}</span>`;
     }
 }
 
@@ -126,7 +136,7 @@ function fetchData() {
 
     let startDateInput = document.getElementById('start-date');
     let startDate = startDateInput.value ? new Date(startDateInput.value) : new Date();
-    let startTime = startDate.toDateString() == now.toDateString() && !showPast ? now.toTimeString().substring(0,5) : "00:00";
+    let startTime = startDate.toDateString() == now.toDateString() && !showPast ? now.toTimeString().substring(0, 5) : "00:00";
 
     let endDate = startDate;
     let endTime = "23:59";
@@ -152,14 +162,14 @@ function fetchData() {
     }
 
     Promise.all(promises)
-    .then(values => {
-        const dataToShow = [].concat(...values);
-        addDataToTable(startDate, new DataObject(replaceServices(dataToShow)));
-        loader(false)
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-    });
+        .then(values => {
+            const dataToShow = [].concat(...values);
+            addDataToTable(startDate, new DataObject(replaceServices(dataToShow)));
+            loader(false)
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
 }
 
 function replaceServices(dataToShow) {
@@ -217,38 +227,63 @@ function updateButtonColor() {
 
 function addDataToTable(startDate, dataObject) {
     let estacoes = dataObject.data;
+    // Map service to color hex
+    const serviceColors = {
+        IC: '#e74c3c',
+        IR: '#f39c12',
+        ALFA: '#2980b9',
+        REGIONAL: '#8e44ad',
+        'URB|SUBUR': '#27ae60',
+        INTERNACIONAL: '#c1c1c1ff',
+        ESPECIAL: '#fed1b3ff'
+    };
     for (let i = 0; i < estacoes.length; i++) {
         let table = document.getElementById('data-table');
         let row = table.insertRow(-1);
-        let tipoServico = row.insertCell(0);
-        let dataHoraPartidaChegada = row.insertCell(1);
-        let nomeEstacaoOrigem = row.insertCell(2);
-        let nomeEstacaoDestino = row.insertCell(3);
-        let observacoes = row.insertCell(4);
+        // Remove the service column, only create 4 cells
+        let dataHoraPartidaChegada = row.insertCell(0);
+        let nomeEstacaoOrigem = row.insertCell(1);
+        let nomeEstacaoDestino = row.insertCell(2);
+        let observacoes = row.insertCell(3);
         let nComboio = estacoes[i].nComboio;
-        tipoServico.innerHTML = estacoes[i].tipoServico;
+        // Get the service key from the original data
+        let originalServiceKey = Object.keys(services).find(key => estacoes[i].tipoServico === services[key].color || estacoes[i].tipoServico === key || estacoes[i].tipoServico.includes(key));
+        let color = serviceColors[originalServiceKey] || '#fff';
+        // Use only a thick colored left border for the Hora column
         dataHoraPartidaChegada.innerHTML = estacoes[i].dataHoraPartidaChegada;
+        dataHoraPartidaChegada.style.borderLeft = `4px solid ${color}`;
         nomeEstacaoOrigem.innerHTML = estacoes[i].nomeEstacaoOrigem;
         nomeEstacaoDestino.innerHTML = estacoes[i].nomeEstacaoDestino;
         observacoes.innerHTML = estacoes[i].observacoes;
         if (dataObject.data[i].observacoes == "SUPRIMIDO") {
-            table.rows[i + 1].style.backgroundColor = "#771919";
+            row.style.backgroundColor = "#771919";
         } else if (dataObject.data[i].observacoes == "ATRASADO") {
-            table.rows[i + 1].style.backgroundColor = "#e6b800";
+            row.style.backgroundColor = "#e6b800";
         } else {
-            table.rows[i + 1].style.backgroundColor = "#0e2b0c"
+            row.style.backgroundColor = "#0e2b0c";
         }
         if (showPast) {
             let now = new Date();
             if (startDate < now) {
-                let dataHoraPartidaChegada = new Date(`${now.toISOString().split('T')[0]}T${estacoes[i].dataHoraPartidaChegada}`);
-                if (now > dataHoraPartidaChegada) {
-                    table.rows[i + 1].style.opacity = 0.2;
+                let dataHoraPartidaChegadaDate = new Date(`${now.toISOString().split('T')[0]}T${estacoes[i].dataHoraPartidaChegada}`);
+                if (now > dataHoraPartidaChegadaDate) {
+                    row.style.opacity = 0.2;
+                    // Also set border color with alpha for the time cell
+                    if (color.startsWith('#') && color.length === 7) {
+                        // Convert hex to rgba with alpha
+                        const r = parseInt(color.slice(1,3),16);
+                        const g = parseInt(color.slice(3,5),16);
+                        const b = parseInt(color.slice(5,7),16);
+                        dataHoraPartidaChegada.style.borderLeft = `4px solid rgba(${r},${g},${b},0.2)`;
+                    } else {
+                        // fallback for non-hex colors
+                        dataHoraPartidaChegada.style.borderLeft = `4px solid ${color}`;
+                    }
                 }
             }
         }
         if (nComboio !== undefined) {
-            row.addEventListener('click', function() {
+            row.addEventListener('click', function () {
                 showPopup(nComboio);
             });
         }
@@ -286,20 +321,20 @@ function showPopup(nComboio) {
         document.getElementById('popup-content').innerHTML = `
             <table class="passage-table">
                 ${parsedData.nodesPassagem.map((node, index, array) => {
-                    let imageSrc;
-                    if (index === array.length - 1) {
-                        imageSrc = node.comboioPassou ? 'passou-last-true.png' : 'passou-last-false.png';
-                    } else {
-                        imageSrc = node.comboioPassou ? 'passou-true.png' : 'passou-false.png';
-                    }
-                    return `
+            let imageSrc;
+            if (index === array.length - 1) {
+                imageSrc = node.comboioPassou ? 'passou-last-true.png' : 'passou-last-false.png';
+            } else {
+                imageSrc = node.comboioPassou ? 'passou-true.png' : 'passou-false.png';
+            }
+            return `
                         <tr>
                             <td>${node.nomeEstacao}</td>
                             <td><img src="${imageSrc}" alt="${node.comboioPassou ? 'True' : 'False'}"></td>
                             <td>${node.horaProgramada}</td>
                         </tr>
                     `;
-                }).join('')}
+        }).join('')}
             </table>
         `;
     }).catch(error => {
@@ -309,7 +344,7 @@ function showPopup(nComboio) {
 }
 
 function fetchDataForTrain(nComboio) {
-    let url = `https://corsproxy.io/?https://servicos.infraestruturasdeportugal.pt/negocios-e-servicos/horarios-ncombio/${nComboio}/${new Date().toISOString().split('T')[0]}`;
+    let url = `https://corsproxy.ruben-araujo.workers.dev/corsproxy/?apiurl=https://servicos.infraestruturasdeportugal.pt/negocios-e-servicos/horarios-ncombio/${nComboio}/${new Date().toISOString().split('T')[0]}`;
     return fetch(url)
         .then(response => {
             if (!response.ok) {
