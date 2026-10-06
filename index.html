@@ -8,6 +8,10 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="256x256" href="apple-touch-icon.png">
+    <!-- Warm up the connection to the CORS proxy early, since every train data
+         fetch depends on it; shaves off DNS/TCP/TLS handshake latency. -->
+    <link rel="preconnect" href="https://corsproxy.ruben-araujo.workers.dev">
+    <link rel="dns-prefetch" href="https://corsproxy.ruben-araujo.workers.dev">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="train.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
