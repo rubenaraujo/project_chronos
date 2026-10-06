@@ -1,0 +1,43 @@
+name: Build minified assets
+
+# Keeps script.min.js, style.min.css and train.min.css in sync with their
+# source files automatically, so GitHub Pages (served from main/root)
+# never ships stale minified assets after editing script.js/style.css/train.css.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "script.js"
+      - "style.css"
+      - "train.css"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/build.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-minified-assets
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Commit regenerated minified assets
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Rebuild minified assets [skip ci]"
+          file_pattern: "script.min.js style.min.css train.min.css"
