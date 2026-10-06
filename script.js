@@ -113,8 +113,10 @@ function formatDate(date) {
 
 function clearData() {
     let table = document.getElementById('data-table');
-    for (let i = table.rows.length - 1; i > 0; i--) {
-        table.deleteRow(i);
+    let tbody = table.tBodies[0];
+    if (tbody) {
+        // Single DOM mutation instead of deleting rows one by one (avoids N reflows).
+        tbody.innerHTML = '';
     }
 }
 
@@ -280,14 +282,17 @@ function addDataToTable(startDate, dataObject) {
         INTERNACIONAL: '#c1c1c1ff',
         ESPECIAL: '#fed1b3ff'
     };
+    let table = document.getElementById('data-table');
+    // Build rows in a detached DocumentFragment and attach them in one go,
+    // instead of mutating the live table per row (avoids layout thrashing).
+    let fragment = document.createDocumentFragment();
     for (let i = 0; i < estacoes.length; i++) {
-        let table = document.getElementById('data-table');
-        let row = table.insertRow(-1);
-        // Remove the service column, only create 4 cells
-        let dataHoraPartidaChegada = row.insertCell(0);
-        let nomeEstacaoOrigem = row.insertCell(1);
-        let nomeEstacaoDestino = row.insertCell(2);
-        let observacoes = row.insertCell(3);
+        let row = document.createElement('tr');
+        let dataHoraPartidaChegada = document.createElement('td');
+        let nomeEstacaoOrigem = document.createElement('td');
+        let nomeEstacaoDestino = document.createElement('td');
+        let observacoes = document.createElement('td');
+        row.append(dataHoraPartidaChegada, nomeEstacaoOrigem, nomeEstacaoDestino, observacoes);
         let nComboio = estacoes[i].nComboio;
         // Get the service key from the original data
         let originalServiceKey = Object.keys(services).find(key => estacoes[i].tipoServico === services[key].color || estacoes[i].tipoServico === key || estacoes[i].tipoServico.includes(key));
@@ -330,7 +335,9 @@ function addDataToTable(startDate, dataObject) {
                 showPopup(nComboio);
             });
         }
+        fragment.appendChild(row);
     }
+    table.tBodies[0].appendChild(fragment);
 }
 
 function parseTrainData(response) {
