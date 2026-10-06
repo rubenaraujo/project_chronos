@@ -10,6 +10,20 @@ This project was built using HTML, CSS, and JavaScript.
 
 To use this project, simply open the `index.html` file in a web browser. The page will automatically fetch data from infraestruturasdeportugal.pt and display it.
 
+### Development
+
+Edit the source files (`script.js`, `style.css`, `train.css`). The page
+loads the minified `*.min.*` versions in production, so after making
+changes run:
+
+```
+npm install
+npm run build
+```
+
+and commit the regenerated `script.min.js`, `style.min.css` and
+`train.min.css` alongside your source changes.
+
 ### Styling
 
 This project uses a modern, minimalist design with a black and white color scheme. The table is fully responsive and will adapt to different screen sizes.

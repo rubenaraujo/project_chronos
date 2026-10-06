@@ -1,0 +1,28 @@
+{
+  "name": "project_chronos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Project Chronos is a simple web page that displays the next trains arriving into specific stations.",
+  "main": "script.js",
+  "scripts": {
+    "build": "npm run build:js && npm run build:css",
+    "build:js": "esbuild script.js --minify --outfile=script.min.js",
+    "build:css": "esbuild style.css --minify --outfile=style.min.css && esbuild train.css --minify --outfile=train.min.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubenaraujo/project_chronos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/rubenaraujo/project_chronos/issues"
+  },
+  "homepage": "https://github.com/rubenaraujo/project_chronos#readme",
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
+}
