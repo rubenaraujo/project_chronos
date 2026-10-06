@@ -188,8 +188,40 @@ function replaceServices(dataToShow) {
     return dataToShow;
 }
 
+// Simple sessionStorage cache so toggling UI controls (e.g. "show past") doesn't
+// force a redundant network call for data we already fetched moments ago.
+const CACHE_TTL_MS = 30 * 1000;
+
+function getCachedResponse(cacheKey) {
+    try {
+        let raw = sessionStorage.getItem(cacheKey);
+        if (!raw) return null;
+        let entry = JSON.parse(raw);
+        if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
+            sessionStorage.removeItem(cacheKey);
+            return null;
+        }
+        return entry.data;
+    } catch (e) {
+        return null;
+    }
+}
+
+function setCachedResponse(cacheKey, data) {
+    try {
+        sessionStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: data }));
+    } catch (e) {
+        // sessionStorage may be unavailable/full; fail silently, caching is just an optimization.
+    }
+}
+
 function fetchDataForTimeFrame(startDateTime, endDateTime, stationCode) {
     let url = `https://corsproxy.ruben-araujo.workers.dev/corsproxy/?apiurl=https%3A%2F%2Fwww.infraestruturasdeportugal.pt%2Fnegocios-e-servicos%2Fpartidas-chegadas%2F${stationCode}%2F${encodeURIComponent(formatDate(startDateTime))}%2F${encodeURIComponent(formatDate(endDateTime))}%2FINTERNACIONAL%2C%2520ALFA%2C%2520IC%2C%2520IR%2C%2520REGIONAL%2C%2520URB%7CSUBUR%2C%2520ESPECIAL`;
+
+    let cached = getCachedResponse(url);
+    if (cached) {
+        return Promise.resolve(cached);
+    }
 
     return fetch(url)
         .then(response => {
@@ -200,6 +232,7 @@ function fetchDataForTimeFrame(startDateTime, endDateTime, stationCode) {
         })
         .then(data => {
             if (data.response.length == 0) {
+                setCachedResponse(url, []);
                 return [];
             }
             let estacoes = data.response[0].NodesComboioTabelsPartidasChegadas;
@@ -215,6 +248,7 @@ function fetchDataForTimeFrame(startDateTime, endDateTime, stationCode) {
                     estacoes[i].NComboio1
                 );
             }
+            setCachedResponse(url, dataObject.data);
             return dataObject.data;
         });
 }
