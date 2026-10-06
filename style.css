@@ -12,6 +12,7 @@ body {
     padding-top: 10px;
     animation: fadein 1.2s;
     width: 270px;
+    height: auto;
 }
 
 table {
@@ -284,6 +285,7 @@ tbody tr.hide {
     }
     .logo {
         width: 170px;
+        height: auto;
     }
     #data-table th:nth-child(4),
     #data-table td:nth-child(4) {
