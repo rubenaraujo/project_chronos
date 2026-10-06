@@ -86,7 +86,8 @@ document.getElementById('where-am-i').value = "porto_s_bento";
 let showPast = false;
 
 function loader(show, isPopup = false) {
-    var loader = document.getElementById('loader');
+    // Each context (main page vs. popup) has its own loader element.
+    var loader = document.getElementById(isPopup ? 'popup-loader' : 'loader');
     var table = document.getElementById('table');
     var popup = document.getElementById('popup');
     var popupContent = document.getElementById('popup-content');
