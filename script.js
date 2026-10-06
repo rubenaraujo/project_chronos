@@ -49,6 +49,18 @@ const services = {
     }
 }
 
+// Single source of truth for service hex colors (previously duplicated in
+// addSubtitle() and addDataToTable()).
+const serviceColors = {
+    IC: '#e74c3c',
+    IR: '#f39c12',
+    ALFA: '#2980b9',
+    REGIONAL: '#8e44ad',
+    'URB|SUBUR': '#27ae60',
+    INTERNACIONAL: '#c1c1c1ff',
+    ESPECIAL: '#fed1b3ff'
+};
+
 class DataObject {
     constructor(data = []) {
         this.data = data;
@@ -123,16 +135,6 @@ function clearData() {
 function addSubtitle() {
     let legend = document.getElementById('subtitle');
     legend.innerHTML = "";
-    // Map service to color hex 
-    const serviceColors = {
-        IC: '#e74c3c',
-        IR: '#f39c12',
-        ALFA: '#2980b9',
-        REGIONAL: '#8e44ad',
-        'URB|SUBUR': '#27ae60',
-        INTERNACIONAL: '#c1c1c1ff',
-        ESPECIAL: '#fed1b3ff'
-    };
     for (let key in services) {
         let color = serviceColors[key] || '#fff';
         let text = key;
@@ -272,16 +274,6 @@ function updateButtonColor() {
 
 function addDataToTable(startDate, dataObject) {
     let estacoes = dataObject.data;
-    // Map service to color hex
-    const serviceColors = {
-        IC: '#e74c3c',
-        IR: '#f39c12',
-        ALFA: '#2980b9',
-        REGIONAL: '#8e44ad',
-        'URB|SUBUR': '#27ae60',
-        INTERNACIONAL: '#c1c1c1ff',
-        ESPECIAL: '#fed1b3ff'
-    };
     let table = document.getElementById('data-table');
     // Build rows in a detached DocumentFragment and attach them in one go,
     // instead of mutating the live table per row (avoids layout thrashing).
