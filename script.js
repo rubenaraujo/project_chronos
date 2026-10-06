@@ -371,16 +371,20 @@ function showPopup(nComboio) {
         document.getElementById('popup-content').innerHTML = `
             <table class="passage-table">
                 ${parsedData.nodesPassagem.map((node, index, array) => {
-            let imageSrc;
+            let imageSrc, imgWidth, imgHeight;
             if (index === array.length - 1) {
                 imageSrc = node.comboioPassou ? 'passou-last-true.png' : 'passou-last-false.png';
+                imgWidth = 36;
+                imgHeight = 37;
             } else {
                 imageSrc = node.comboioPassou ? 'passou-true.png' : 'passou-false.png';
+                imgWidth = 36;
+                imgHeight = 113;
             }
             return `
                         <tr>
                             <td>${node.nomeEstacao}</td>
-                            <td><img src="${imageSrc}" alt="${node.comboioPassou ? 'True' : 'False'}"></td>
+                            <td><img src="${imageSrc}" width="${imgWidth}" height="${imgHeight}" alt="${node.comboioPassou ? 'True' : 'False'}"></td>
                             <td>${node.horaProgramada}</td>
                         </tr>
                     `;
