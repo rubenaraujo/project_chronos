@@ -33,6 +33,10 @@ button {
     outline: none;
 }
 
+button .icon {
+    vertical-align: middle;
+}
+
 #toggle-past-button {
     padding-left: 0px;
     padding-right: 0px;
