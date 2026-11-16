@@ -9,10 +9,22 @@ body {
 }
 
 .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
     padding-top: 10px;
     animation: fadein 1.2s;
-    width: 270px;
-    height: auto;
+}
+
+.logo img {
+    height: 64px;
+    width: auto;
+}
+
+.logo span {
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
 }
 
 table {
@@ -283,9 +295,11 @@ tbody tr.hide {
     th, td {
         padding: 5px;
     }
-    .logo {
-        width: 170px;
-        height: auto;
+    .logo img {
+        height: 44px;
+    }
+    .logo span {
+        font-size: 28px;
     }
     #data-table th:nth-child(4),
     #data-table td:nth-child(4) {

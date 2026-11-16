@@ -2,7 +2,7 @@
 // instantly and the UI still renders while offline. API calls to the
 // CORS proxy are intentionally left untouched (always go to the network),
 // since train schedule data must stay fresh.
-const CACHE_NAME = 'chronos-static-v4';
+const CACHE_NAME = 'chronos-static-v5';
 const STATIC_ASSETS = [
     './',
     './index.html',
@@ -15,7 +15,7 @@ const STATIC_ASSETS = [
     './apple-touch-icon.png',
     './android-chrome-128x128.png',
     './android-chrome-256x256.png',
-    './website-icons/logo-with-text-no-bg.png',
+    './website-icons/mark.png',
     './website-icons/logo-with-text-no-bg-24.png',
     './passou-true.png',
     './passou-false.png',
