@@ -267,7 +267,7 @@ function toggleShowPast() {
 function updateButtonColor() {
     const button = document.getElementById('toggle-past-button');
     if (showPast) {
-        button.style.color = 'rgb(244,212,164)';
+        button.style.color = 'rgb(143,168,200)';
     } else {
         button.style.color = '';
     }
