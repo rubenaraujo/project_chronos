@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "description": "Project Chronos is a simple web page that displays the next trains arriving into specific stations.",
-  "main": "script.js",
+  "main": "src/main.js",
   "scripts": {
-    "build": "npm run build:js && npm run build:css",
-    "build:js": "esbuild script.js --minify --outfile=script.min.js",
-    "build:css": "esbuild style.css --minify --outfile=style.min.css",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node scripts/build.mjs",
+    "lint": "eslint . && prettier --check src css scripts test",
+    "format": "prettier --write src css scripts test",
+    "test": "node --test \"test/*.test.js\"",
+    "check": "npm run lint && npm test && npm run build"
   },
   "repository": {
     "type": "git",
@@ -17,12 +18,18 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/rubenaraujo/project_chronos/issues"
   },
   "homepage": "https://github.com/rubenaraujo/project_chronos#readme",
   "devDependencies": {
-    "esbuild": "^0.28.2"
+    "@eslint/js": "^10.0.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
+    "html-minifier-terser": "^7.2.0",
+    "prettier": "^3.10.1",
+    "sharp": "^0.35.5"
   }
 }

@@ -1,0 +1,16 @@
+:root {
+    --bg: #09090b;
+    --surface: #111114;
+    --surface-2: #17171b;
+    --line: rgba(255, 255, 255, 0.07);
+    --line-strong: rgba(255, 255, 255, 0.14);
+    --text: #f4f4f5;
+    --muted: #8a8a93;
+    --faint: #5b5b63;
+    --accent: #9db7dc;
+    --warn: #fbbf24;
+    --bad: #f87171;
+    --radius: 20px;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    color-scheme: dark;
+}

@@ -1,0 +1,219 @@
+/* Sheet */
+.backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    background: rgba(0, 0, 0, 0.6);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        opacity 0.3s var(--ease),
+        visibility 0.3s;
+}
+
+.popup {
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    width: min(440px, calc(100% - 32px));
+    max-height: min(720px, calc(100dvh - 64px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 28px 24px 24px;
+    border: 1px solid var(--line-strong);
+    border-radius: 24px;
+    background: var(--surface);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, calc(-50% + 16px)) scale(0.98);
+    transition:
+        opacity 0.3s var(--ease),
+        transform 0.4s var(--ease),
+        visibility 0.3s;
+}
+
+body.sheet-open .backdrop {
+    opacity: 1;
+    visibility: visible;
+}
+
+body.sheet-open .popup {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%);
+}
+
+.grabber {
+    display: none;
+}
+
+.close-button {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: var(--muted);
+    transition:
+        color 0.2s,
+        background 0.2s;
+}
+
+.close-button:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.spinner-wrap {
+    display: none;
+    place-items: center;
+    height: 220px;
+}
+
+.popup.loading .spinner-wrap {
+    display: grid;
+}
+
+.popup.loading .popup-content {
+    display: none;
+}
+
+.spinner {
+    width: 26px;
+    height: 26px;
+    border: 2px solid var(--line-strong);
+    border-top-color: var(--text);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.trip-head {
+    padding-right: 44px;
+}
+
+.trip-head h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.trip-head p {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.trip-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 14px 0 24px;
+}
+
+.timeline {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.stop {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    padding: 0 0 22px 28px;
+    color: var(--muted);
+    font-size: 15px;
+}
+
+.stop:last-child {
+    padding-bottom: 0;
+}
+
+.stop::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 11px;
+    height: 11px;
+    border: 2px solid var(--faint);
+    border-radius: 50%;
+    background: var(--surface);
+    z-index: 1;
+}
+
+.stop::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 17px;
+    bottom: -5px;
+    width: 1px;
+    background: var(--line-strong);
+}
+
+.stop:last-child::after {
+    display: none;
+}
+
+.stop.done {
+    color: var(--text);
+}
+
+.stop.done::before {
+    border-color: var(--text);
+    background: var(--text);
+}
+
+.stop.done::after {
+    background: var(--text);
+}
+
+.stop.next {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.stop.next::before {
+    border-color: var(--accent);
+    background: var(--accent);
+    box-shadow: 0 0 0 5px rgba(157, 183, 220, 0.18);
+}
+
+.stop time {
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+}
+
+.stop.next time {
+    color: var(--accent);
+}
+
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+}
+
+@keyframes shimmer {
+    to {
+        background-position: -200% 0;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,5 @@
+*.min.js
+*.min.css
+/index.html
+/sw.js
+package-lock.json

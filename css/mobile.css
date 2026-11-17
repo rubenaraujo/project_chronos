@@ -1,0 +1,93 @@
+@media (max-width: 560px) {
+    body {
+        font-size: 14px;
+    }
+
+    .app {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .legend {
+        margin-left: -16px;
+        margin-right: -16px;
+        padding: 0 16px;
+    }
+
+    .picker {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        margin-top: 20px;
+    }
+
+    .tools {
+        padding: 0;
+    }
+
+    #start-date {
+        flex: 1;
+    }
+
+    #data-table tr {
+        grid-template-columns: 74px minmax(0, 1fr);
+        column-gap: 10px;
+        padding: 13px 14px;
+    }
+
+    #data-table tr.next {
+        grid-template-columns: 74px minmax(0, 1fr) auto;
+    }
+
+    #data-table tr.hour-row {
+        padding: 8px 14px;
+    }
+
+    #data-table tr.next .time-cell {
+        font-size: 21px;
+    }
+
+    .time-cell {
+        font-size: 18px;
+        gap: 8px;
+    }
+
+    .pill {
+        padding: 3px 8px;
+        font-size: 11px;
+    }
+
+    /* Bottom sheet */
+    .popup {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-height: 86dvh;
+        padding: 28px 20px max(24px, env(safe-area-inset-bottom));
+        border-width: 1px 0 0;
+        border-radius: 24px 24px 0 0;
+        transform: translateY(100%);
+    }
+
+    body.sheet-open .popup {
+        transform: translateY(0);
+    }
+
+    .grabber {
+        display: block;
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        width: 36px;
+        height: 4px;
+        margin-left: -18px;
+        border-radius: 2px;
+        background: var(--line-strong);
+    }
+
+    .close-button {
+        top: 16px;
+        right: 10px;
+    }
+}

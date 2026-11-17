@@ -1,64 +1,73 @@
-// Service worker: caches static app shell assets so repeat visits load
-// instantly and the UI still renders while offline. API calls to the
-// CORS proxy are intentionally left untouched (always go to the network),
-// since train schedule data must stay fresh.
-const CACHE_NAME = 'chronos-static-v10';
+// Generated from src/sw.js by scripts/build.mjs; ff9bf28831 is a hash of the built assets,
+// so every release gets a fresh cache without bumping anything by hand.
+// API calls to the CORS proxy are never touched: schedule data must stay fresh.
+const CACHE_NAME = 'chronos-ff9bf28831';
 const STATIC_ASSETS = [
-    './',
-    './index.html',
-    './style.min.css',
-    './script.min.js',
-    './manifest.json',
-    './favicon-16x16.png',
-    './favicon-24x24.png',
-    './apple-touch-icon.png',
-    './android-chrome-128x128.png',
-    './android-chrome-256x256.png',
-    './maskable-icon-192.png',
-    './maskable-icon-512.png',
-    './website-icons/mark.png',
-    './website-icons/logo-with-text-no-bg-24.png'
+    "./",
+    "./index.html",
+    "./style.min.css?v=ff9bf28831",
+    "./script.min.js?v=ff9bf28831",
+    "./manifest.json",
+    "./favicon-16x16.png",
+    "./favicon-24x24.png",
+    "./apple-touch-icon.png",
+    "./android-chrome-128x128.png",
+    "./android-chrome-256x256.png",
+    "./maskable-icon-192.png",
+    "./maskable-icon-512.png",
+    "./website-icons/mark.png",
+    "./website-icons/logo-with-text-no-bg-24.png"
 ];
 
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(STATIC_ASSETS))
-            .then(() => self.skipWaiting())
+        caches
+            .open(CACHE_NAME)
+            .then((cache) => cache.addAll(STATIC_ASSETS))
+            .then(() => self.skipWaiting()),
     );
 });
 
-self.addEventListener('activate', event => {
+self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys()
-            .then(keys => Promise.all(
-                keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-            ))
-            .then(() => self.clients.claim())
+        caches
+            .keys()
+            .then((keys) =>
+                Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))),
+            )
+            .then(() => self.clients.claim()),
     );
 });
 
-self.addEventListener('fetch', event => {
-    const url = new URL(event.request.url);
-
-    // Only handle same-origin GET requests for the static app shell;
-    // let everything else (notably the external train data API) pass through.
-    if (event.request.method !== 'GET' || url.origin !== self.location.origin) {
-        return;
+async function networkFirst(request) {
+    const cache = await caches.open(CACHE_NAME);
+    try {
+        const response = await fetch(request);
+        if (response.ok) cache.put(request, response.clone());
+        return response;
+    } catch (error) {
+        const cached = await cache.match(request, { ignoreSearch: true });
+        if (cached) return cached;
+        throw error;
     }
+}
 
-    event.respondWith(
-        caches.match(event.request).then(cached => {
-            if (cached) {
-                return cached;
-            }
-            return fetch(event.request).then(response => {
-                if (response && response.ok) {
-                    const responseClone = response.clone();
-                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
-                }
-                return response;
-            });
-        })
-    );
+async function cacheFirst(request) {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+    const response = await fetch(request);
+    if (response.ok) {
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(request, response.clone());
+    }
+    return response;
+}
+
+self.addEventListener('fetch', (event) => {
+    const { request } = event;
+    const url = new URL(request.url);
+    if (request.method !== 'GET' || url.origin !== self.location.origin) return;
+
+    const isImage = request.destination === 'image';
+    event.respondWith(isImage ? cacheFirst(request) : networkFirst(request));
 });

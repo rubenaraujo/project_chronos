@@ -8,21 +8,18 @@ This project was built using HTML, CSS, and JavaScript.
 
 ## Usage
 
-To use this project, simply open the `index.html` file in a web browser. The page will automatically fetch data from infraestruturasdeportugal.pt and display it.
+Serve the repo root with any static server (ES modules don't load from `file://`), e.g. `npx serve .`.
 
 ### Development
 
-Edit the source files (`script.js`, `style.css`). The page
-loads the minified `*.min.*` versions in production, so after making
-changes run:
+Source lives in `src/` (JS modules, `index.html`, `sw.js`) and `css/` (tokens, base, layout, list, states, sheet, mobile, motion). The deployed files (`index.html`, `sw.js`, `script.min.js`, `style.min.css`) are generated; don't edit them.
 
 ```
 npm install
-npm run build
+npm run check   # lint + tests + build
 ```
 
-and commit the regenerated `script.min.js` and `style.min.css`
-alongside your source changes.
+Other scripts: `npm run build`, `npm test`, `npm run lint`, `npm run format`. The build bundles and minifies JS/CSS, minifies the HTML and generates the service worker with a content hash, so each release invalidates the cache automatically. CI runs the same steps and commits the generated files.
 
 ### Styling
 
