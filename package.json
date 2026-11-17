@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npm run build:js && npm run build:css",
     "build:js": "esbuild script.js --minify --outfile=script.min.js",
-    "build:css": "esbuild style.css --minify --outfile=style.min.css && esbuild train.css --minify --outfile=train.min.css",
+    "build:css": "esbuild style.css --minify --outfile=style.min.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -12,7 +12,7 @@ To use this project, simply open the `index.html` file in a web browser. The pag
 
 ### Development
 
-Edit the source files (`script.js`, `style.css`, `train.css`). The page
+Edit the source files (`script.js`, `style.css`). The page
 loads the minified `*.min.*` versions in production, so after making
 changes run:
 
@@ -21,8 +21,8 @@ npm install
 npm run build
 ```
 
-and commit the regenerated `script.min.js`, `style.min.css` and
-`train.min.css` alongside your source changes.
+and commit the regenerated `script.min.js` and `style.min.css`
+alongside your source changes.
 
 ### Styling
 
